@@ -1,29 +1,36 @@
-import express from 'express';
-import cors from 'cors';
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
-const PORT = 5000; // You can change this if needed
+const PORT = process.env.PORT || 5000;
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Sample products data
-const products = [
-  { id: 1, name: 'Laptop', price: 500, description: 'Second-hand laptop in good condition' },
-  { id: 2, name: 'Phone', price: 200, description: 'Used smartphone with charger' },
-  { id: 3, name: 'Chair', price: 50, description: 'Wooden chair, slightly used' },
-];
-
-// GET all products
-app.get('/products', (req, res) => {
-  res.json(products);
+// ✅ Root route
+app.get("/", (req, res) => {
+  res.send("✅ SecondHandStore Backend is LIVE on Vercel!");
 });
 
-// Root endpoint (optional)
-app.get('/', (req, res) => {
-  res.send('Backend is running 🚀');
+// ✅ Example API route
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from the SecondHandStore API!" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// ✅ Example: Products route
+app.get("/api/products", (req, res) => {
+  res.json([
+    { id: 1, name: "Used Laptop", price: 450 },
+    { id: 2, name: "Vintage Camera", price: 120 },
+    { id: 3, name: "Old Phone", price: 60 },
+  ]);
 });
+
+// Start server (for local testing)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => console.log(`Server running locally on port ${PORT}`));
+}
+
+// ✅ Export app for Vercel Serverless Functions
+module.exports = app;
