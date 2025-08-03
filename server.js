@@ -1,28 +1,25 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
-
-dotenv.config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
+// Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB error:", err));
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-app.get("/", (req, res) => {
-  res.send("SecondHandStore Backend is LIVE!");
+// Example route
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from Vercel Backend!" });
 });
 
-// Example API route
-app.get("/api/products", (req, res) => {
-  res.json([{ name: "Sample Product", price: 10 }]);
-});
-
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+// Export app for Vercel serverless
+module.exports = app;
